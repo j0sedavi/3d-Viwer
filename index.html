@@ -25,14 +25,35 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      padding: 10px;
     }
 
     iframe {
       width: 100%;
       height: 100%;
+      max-width: 100vw;
+      max-height: 100vh;
       border: none;
-      border-radius: 10px;
+      border-radius: 12px;
       box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+    }
+
+    .creditos {
+      font-size: 13px;
+      font-weight: normal;
+      margin: 5px;
+      color: #aaa;
+      text-align: center;
+    }
+
+    .creditos a {
+      font-weight: bold;
+      color: #b84bff;
+      text-decoration: none;
+    }
+
+    .creditos a:hover {
+      text-decoration: underline;
     }
 
     .error {
@@ -46,7 +67,7 @@
 
 <body>
   <div class="container" id="viewerContainer">
-    <!-- O iframe será adicionado aqui via JavaScript -->
+    <!-- Embed será carregado aqui -->
   </div>
 
   <script>
@@ -59,18 +80,25 @@
       const container = document.getElementById("viewerContainer");
 
       if (!modelId || modelId.length < 10) {
-        container.innerHTML = `<p class="error">❌ Modelo não encontrado. Adicione ?model=ID-do-modelo na URL.</p>`;
+        container.innerHTML = `<p class="error">❌ Modelo não encontrado. Use ?model=ID-do-modelo na URL.</p>`;
         return;
       }
 
-      const iframe = document.createElement("iframe");
-      iframe.src = `https://sketchfab.com/models/${modelId}/embed?autostart=1&dnt=1`;
-      iframe.allow = "autoplay; fullscreen; xr-spatial-tracking";
-      iframe.setAttribute("allowfullscreen", "true");
-      iframe.setAttribute("mozallowfullscreen", "true");
-      iframe.setAttribute("webkitallowfullscreen", "true");
-
-      container.appendChild(iframe);
+      container.innerHTML = `
+        <div class="sketchfab-embed-wrapper" style="width:100%; height:100%;">
+          <iframe 
+            allowfullscreen
+            mozallowfullscreen="true"
+            webkitallowfullscreen="true"
+            allow="autoplay; fullscreen; xr-spatial-tracking"
+            xr-spatial-tracking
+            execution-while-out-of-viewport
+            execution-while-not-rendered
+            web-share
+            src="https://sketchfab.com/models/${modelId}/embed?autospin=1&autostart=1&camera=0&ui_hint=2">
+          </iframe>
+        </div>
+      `;
     }
 
     const modelId = getModelIdFromURL();
