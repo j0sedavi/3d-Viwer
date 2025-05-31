@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Visualizador Sketchfab 3D</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+      background-color: #121212;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      color: #ccc;
+    }
+
+    .container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
+    }
+
+    .error {
+      color: #ff4d4d;
+      font-size: 20px;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container" id="viewerContainer">
+    <!-- O iframe será adicionado aqui via JavaScript -->
+  </div>
+
+  <script>
+    function getModelIdFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("model");
+    }
+
+    function createViewer(modelId) {
+      const container = document.getElementById("viewerContainer");
+
+      if (!modelId || modelId.length < 10) {
+        container.innerHTML = `<p class="error">❌ Modelo não encontrado. Adicione ?model=ID-do-modelo na URL.</p>`;
+        return;
+      }
+
+      const iframe = document.createElement("iframe");
+      iframe.src = `https://sketchfab.com/models/${modelId}/embed?autostart=1&dnt=1`;
+      iframe.allow = "autoplay; fullscreen; xr-spatial-tracking";
+      iframe.setAttribute("allowfullscreen", "true");
+      iframe.setAttribute("mozallowfullscreen", "true");
+      iframe.setAttribute("webkitallowfullscreen", "true");
+
+      container.appendChild(iframe);
+    }
+
+    const modelId = getModelIdFromURL();
+    createViewer(modelId);
+  </script>
+</body>
+
+</html>
